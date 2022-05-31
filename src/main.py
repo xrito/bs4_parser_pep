@@ -117,21 +117,23 @@ def peps_download(session):
     if response is None:
         return
     soup = BeautifulSoup(response.text, features='lxml')
-    main_div = find_tag(soup, 'div', attrs={'id': 'index-by-category'})
-    div_with_td = find_tag(main_div, 'div', attrs={'class': 'table-wrapper'})
-    index_of_peps = div_with_td.find_all('td', attrs={'class': 'num'})
+    main_div = find_tag(soup, 'section', attrs={'id': 'index-by-category'})
+    section = main_div.find_all('section')
     results = [('Статус', 'Количество')]
-    for index in tqdm(index_of_peps):
-        pep = index.find('a')
-        href = pep['href']
-        status_link = urljoin(PEP_DOC_URL, href)
-        response = session.get(status_link)
-        response.encoding = 'utf-8'
-        soup = BeautifulSoup(response.text, 'lxml')
-        status = find_tag(soup, 'dd', attrs={'class': 'field-even'})
-        dl_text = status.text.replace('\n', ' ')
-        tup = (status_link, dl_text)
-        results.append(tup)
+    for tbody in section:
+        body = find_tag(tbody, 'tbody')
+        for index in tqdm(body):
+            td = index.find_next('td', attrs={'class': 'num'})
+            pep = find_tag(td, 'a')
+            href = pep['href']
+            status_link = urljoin(PEP_DOC_URL, href)
+            response = session.get(status_link)
+            response.encoding = 'utf-8'
+            soup = BeautifulSoup(response.text, 'lxml')
+            status = soup.find(string='Status').findNext('dd').contents[0]
+            dl_text = status.string.replace('\n', ' ')
+            tup = (status_link, dl_text)
+            results.append(tup)
     return results
 
 
@@ -170,3 +172,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+# p
