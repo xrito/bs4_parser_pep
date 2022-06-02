@@ -87,24 +87,23 @@ def download(session):
 def pep(session):
     response = get_response(session, PEP_DOC_URL)
     soup = BeautifulSoup(response.text, features='lxml')
-    main_div = find_tag(soup, 'section', attrs={'id': 'index-by-category'})
-    section = main_div.find_all('section')
+    section = find_tag(soup, 'section', attrs={'id': 'numerical-index'})
+    tbody = find_tag(section, 'tbody')
+    tr_body = tbody.find_all('tr')
     status_dict = {}
-    for tbody in section:
-        body = find_tag(tbody, 'tbody')
-        for index in tqdm(body):
-            td = index.find_next('td', attrs={'class': 'num'})
-            pep = find_tag(td, 'a')
-            href = pep['href']
-            status_link = urljoin(PEP_DOC_URL, href)
-            response = session.get(status_link)
-            response.encoding = 'utf-8'
-            soup = BeautifulSoup(response.text, 'lxml')
-            status = soup.find(string='Status').findNext('dd').contents[0]
-            if status in status_dict:
-                status_dict[status] += 1
-            else:
-                status_dict[status] = 0
+    for index in tqdm(tr_body):
+        td = index.find_next('td', attrs={'class': 'num'})
+        pep = find_tag(td, 'a')
+        href = pep['href']
+        status_link = urljoin(PEP_DOC_URL, href)
+        response = session.get(status_link)
+        response.encoding = 'utf-8'
+        soup = BeautifulSoup(response.text, 'lxml')
+        status = soup.find(string='Status').findNext('dd').contents[0]
+        if status in status_dict:
+            status_dict[status] += 1
+        else:
+            status_dict[status] = 0
     titles = ('Статус', 'Количество')
     count_status_dict = sum(status_dict.values())
     total_peps = ('Total', count_status_dict)
