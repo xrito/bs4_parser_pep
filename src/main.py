@@ -1,7 +1,7 @@
 import logging
 import re
 from urllib.parse import urljoin
-
+from collections import defaultdict
 import requests_cache
 from bs4 import BeautifulSoup
 from tqdm import tqdm
@@ -90,7 +90,7 @@ def pep(session):
     section = find_tag(soup, 'section', attrs={'id': 'numerical-index'})
     tbody = find_tag(section, 'tbody')
     tr_body = tbody.find_all('tr')
-    status_dict = {}
+    status_dict = defaultdict()
     for index in tqdm(tr_body):
         td = index.find_next('td', attrs={'class': 'num'})
         pep = find_tag(td, 'a')
@@ -100,15 +100,11 @@ def pep(session):
         response.encoding = 'utf-8'
         soup = BeautifulSoup(response.text, 'lxml')
         status = soup.find(string='Status').findNext('dd').contents[0]
-        if status in status_dict:
-            status_dict[status] += 1
-        else:
-            status_dict[status] = 0
-    titles = ('Статус', 'Количество')
+        status_dict[status] = status_dict.get(status, 0) + 1
     count_status_dict = sum(status_dict.values())
     total_peps = ('Total', count_status_dict)
-    results = list(status_dict.items())
-    results.insert(0, titles)
+    results = [('Статус', 'Количество')]
+    results.extend(status_dict.items())
     results.append(total_peps)
     return results
 

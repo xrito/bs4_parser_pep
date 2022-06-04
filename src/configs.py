@@ -27,12 +27,6 @@ def configure_argument_parser(available_modes):
         choices=('pretty', 'file'),
         help='Дополнительные способы вывода данных'
     )
-    parser.add_argument(
-        '-p',
-        '--pep',
-        choices=('file'),
-        help='спарсить данные обо всех документах PEP в файл CSV'
-    )
     return parser
 
 
