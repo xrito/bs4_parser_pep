@@ -28,8 +28,8 @@ py main.py pep [arg]
 ```
 python main.py -h
 ```
-=======>
 ```
+=======>
 usage: main.py [-h] [-c] [-o {pretty,file}]
                {whats-new,latest-versions,download,pep}
 Парсер документации Python
