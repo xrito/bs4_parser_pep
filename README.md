@@ -1,8 +1,22 @@
 # Парсер документации PEP
-### Hi there 👋, Dmitrii
 
-#### Программа для парсинга документации со страницы https://peps.python.org/
 
+#### Парсер документации со страницы https://peps.python.org/
+### Стек
++ Python 
++ BS4
+### Запуск
+В корневой папке нужно созжать виртуальное окружение и установить зависимости.
+```
+python3 -m venv venv
+```
+```
+pip install -r requirements.txt
+```
+### Программа запускается из main.py в папке ./src/
+```
+python3 main.py [вариант парсера] [аргументы]
+```
 ### Парсеры
 - whats-new   
 Информация о релизах Python
@@ -42,6 +56,12 @@ optional arguments:
   -o {pretty,file}, --output {pretty,file}
      
 ```
-Skills: Python / BS4
 
+
+### Автор
+
+[![Telegram](https://img.shields.io/badge/-Telegram-464646?style=flat-square&logo=Telegram)](https://t.me/harkort)
 [<img src='https://cdn.jsdelivr.net/npm/simple-icons@3.0.1/icons/github.svg' alt='github' height='40'>](https://github.com/xrito)  
+
+
+[![Python](https://img.shields.io/badge/-Python-464646?style=flat-square&logo=Python)](https://www.python.org/)
